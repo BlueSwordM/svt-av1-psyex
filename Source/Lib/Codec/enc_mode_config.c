@@ -6720,7 +6720,7 @@ void svt_aom_sig_deriv_enc_dec(SequenceControlSet *scs, PictureControlSet *pcs, 
         skip_sub_depth_lvl = 2;
 
     set_skip_sub_depth_ctrls(&ctx->skip_sub_depth_ctrls, skip_sub_depth_lvl);
-    ctx->tune_ssim_level = scs->static_config.tune == TUNE_VQSSIM ? SSIM_LVL_3 : SSIM_LVL_0;
+    ctx->tune_ssim_level = scs->static_config.tune == TUNE_VQSSIM ? SSIM_LVL_1 : SSIM_LVL_0;
 }
 /*
 * return the 4x4 level
