@@ -4571,7 +4571,7 @@ static void copy_api_from_app(SequenceControlSet *scs, EbSvtAv1EncConfiguration 
     {
         // TODO: set search mode based on preset
         //scs->static_config.superres_auto_search_type = SUPERRES_AUTO_SOLO;
-        scs->static_config.superres_auto_search_type = SUPERRES_AUTO_DUAL;
+        scs->static_config.superres_auto_search_type = scs->static_config.tune == TUNE_VQSSIM ? SUPERRES_AUTO_ALL : SUPERRES_AUTO_DUAL;
         //scs->static_config.superres_auto_search_type = SUPERRES_AUTO_ALL;
     }
 
