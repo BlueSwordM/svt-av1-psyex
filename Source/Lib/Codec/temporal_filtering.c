@@ -4115,7 +4115,7 @@ EbErrorType svt_av1_init_temporal_filtering(
             ((search_type == SUPERRES_AUTO_DUAL) ||
              (search_type == SUPERRES_AUTO_ALL)) // auto-dual or auto-all
             && ((frame_update_type == SVT_AV1_KF_UPDATE) ||
-                (frame_update_type == SVT_AV1_ARF_UPDATE)); // recode only applies to key and arf
+                (frame_update_type == SVT_AV1_ARF_UPDATE && centre_pcs->scs->static_config.tune != TUNE_VQSSIM)); // recode only applies to key and arf
         if ((centre_pcs->compute_psnr || centre_pcs->compute_ssim) ||
             superres_recode_enabled) {
             save_src_pic_buffers(centre_pcs, ss_y, is_highbd);
