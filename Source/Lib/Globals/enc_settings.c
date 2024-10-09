@@ -1132,6 +1132,7 @@ EbErrorType svt_av1_set_default_params(EbSvtAv1EncConfiguration *config_ptr) {
     config_ptr->max_tx_size                = 64;
     config_ptr->extended_crf_qindex_offset = 0;
     config_ptr->ac_bias                    = 0.0;
+    config_ptr->noise_norm_strength               = 0;
     return return_error;
 }
 
