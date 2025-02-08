@@ -3780,6 +3780,11 @@ void *svt_aom_rate_control_kernel(void *input_ptr) {
                         chroma_qindex -= CLIP3(0, 16, (frm_hdr->quantization_params.base_q_idx / 2) - 14);
                     }
 
+                    // Boost chroma on wide color (BT.2020) primary with ramp down
+                    if (scs->static_config.color_primaries == EB_CICP_CP_BT_2020) {
+                        chroma_qindex -= CLIP3(0, 16, (frm_hdr->quantization_params.base_q_idx / 2) - 8);
+                    }
+
                     chroma_qindex = clamp_qindex(scs, chroma_qindex);
 
                     // Calculate chroma delta q for Cb, and clip it to a valid range
