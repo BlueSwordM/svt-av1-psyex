@@ -1047,7 +1047,15 @@ typedef struct EbSvtAv1EncConfiguration {
      * 2: partial (interpolation filter tweaks only)
      * Default is 0
      */
-    uint8_t spy_rd;
+     uint8_t spy_rd;
+
+    /**
+     * @brief Prevent macroblocks from being boosted to very low q.
+     *
+     * Default is 0. 0 = off, 1 = on.
+     */
+     uint8_t low_q_taper;
+
 
     /**
      * @brief Enable sharp-tx, a toggle that enables much sharper transforms decisions for higher fidelity ouput,

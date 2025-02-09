@@ -1832,6 +1832,36 @@ void svt_av1_normalize_sb_delta_q(PictureControlSet *pcs) {
     }
 }
 
+void lowq_taper(PictureControlSet *pcs) {
+    PictureParentControlSet *ppcs_ptr = pcs->ppcs;
+    SequenceControlSet      *scs      = pcs->ppcs->scs;
+	const int16_t scs_qindex = CLIP3(MIN_Q_INDEX,
+									 MAX_Q_INDEX,
+									 quantizer_to_qindex[(uint8_t)scs->static_config.qp] + scs->static_config.extended_crf_qindex_offset);
+	const int16_t dampening_thr = MIN(44, scs_qindex);
+	uint16_t sb_cnt = scs->sb_total_count;
+	for (uint32_t sb_addr = 0; sb_addr < sb_cnt; ++sb_addr) {
+        SuperBlock *sb_ptr = pcs->sb_ptr_array[sb_addr];
+
+        int16_t sb_qindex = sb_ptr->qindex;
+		if (sb_qindex < dampening_thr && sb_qindex < scs_qindex) {
+			int16_t boost = scs_qindex - sb_qindex;
+			int16_t boost_beyond_thr;
+			if (dampening_thr == scs_qindex) {
+				boost_beyond_thr = boost;
+			} else {
+				boost_beyond_thr = dampening_thr - sb_qindex;
+			}
+			float boost_before_thr = boost - boost_beyond_thr;
+			float x = 1 - (float)sb_qindex/dampening_thr;
+			float boost_dampener = (-0.3 * pow(x, 2) + x) / x;
+			int16_t new_boost = boost_before_thr + boost_beyond_thr * boost_dampener;
+			sb_qindex = scs_qindex - new_boost;
+			sb_ptr->qindex = sb_qindex;
+		}
+    }
+}
+
 static int av1_find_qindex(double desired_q, aom_bit_depth_t bit_depth, int best_qindex, int worst_qindex) {
     assert(best_qindex <= worst_qindex);
     int low  = best_qindex;
@@ -3960,8 +3990,12 @@ void *svt_aom_rate_control_kernel(void *input_ptr) {
             if ((pcs->scs->static_config.tune == TUNE_SSIM || pcs->scs->static_config.tune == TUNE_VQSSIM) && !pcs->ppcs->frm_hdr.delta_q_params.delta_q_present) {
                 // enable sb level qindex when tune SSIM or VQ-SSIM
                 pcs->ppcs->frm_hdr.delta_q_params.delta_q_present = 1;
+            }			
+            if (scs->static_config.rate_control_mode == SVT_AV1_RC_MODE_CQP_OR_CRF && scs->static_config.low_q_taper == 1)
+            {
+                lowq_taper(pcs);
             }
-
+            
             if (pcs->ppcs->frm_hdr.delta_q_params.delta_q_present &&
                 pcs->ppcs->frm_hdr.delta_q_params.delta_q_res != 1) {
                 // adjust delta q res and normalize superblock delta q values to reduce signaling overhead

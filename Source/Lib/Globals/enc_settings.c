@@ -974,6 +974,11 @@ EbErrorType svt_av1_verify_settings(SequenceControlSet *scs) {
         return_error = EB_ErrorBadParameter;
     }
 
+    if (config->low_q_taper > 1) {
+        SVT_ERROR("Instance %u: low-q-taper must be between 0 and 1\n", channel_number + 1);
+        return_error = EB_ErrorBadParameter;
+    }
+
     if (config->sharp_tx > 1) {
         SVT_ERROR("Instance %u: sharp-tx must be either 0 and 1\n", channel_number + 1);
         return_error = EB_ErrorBadParameter;
@@ -1155,6 +1160,7 @@ EbErrorType svt_av1_set_default_params(EbSvtAv1EncConfiguration *config_ptr) {
     config_ptr->noise_norm_strength               = 0;
     config_ptr->kf_tf_strength                    = 1;
     config_ptr->spy_rd                            = 0;
+    config_ptr->low_q_taper                       = 0;
     config_ptr->sharp_tx                          = 1;
     config_ptr->hbd_mds                           = 0;
     return return_error;
@@ -1323,6 +1329,12 @@ void svt_av1_print_lib_params(SequenceControlSet *scs) {
         // 1 is full spy-rd, 2 is partial spy-rd
         SVT_INFO("SVT [config]: spy-rd \t\t\t\t\t\t\t: %s\n",
         config->spy_rd == 1 ? "oui" : (config->spy_rd == 2 ? "ouais" : "non"));
+
+        //Low QP taper
+		if (config->low_q_taper) {
+            SVT_INFO("SVT [config]: Low Q Taper \t\t\t\t\t\t\t: %s\n",
+                    config->low_q_taper ? "On" : "Off");
+        }
     }
 
 #if DEBUG_BUFFERS
@@ -2367,6 +2379,7 @@ EB_API EbErrorType svt_av1_enc_parse_parameter(EbSvtAv1EncConfiguration *config_
         {"hbd-mds", &config_struct->hbd_mds},
         {"sharp-tx", &config_struct->sharp_tx},
         {"spy-rd", &config_struct->spy_rd},
+        {"low-q-taper", &config_struct->low_q_taper},
     };
     const size_t uint8_opts_size = sizeof(uint8_opts) / sizeof(uint8_opts[0]);
 
