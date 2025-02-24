@@ -974,6 +974,11 @@ EbErrorType svt_av1_verify_settings(SequenceControlSet *scs) {
         return_error = EB_ErrorBadParameter;
     }
 
+    if (config->sharp_tx > 1) {
+        SVT_ERROR("Instance %u: sharp-tx must be either 0 and 1\n", channel_number + 1);
+        return_error = EB_ErrorBadParameter;
+    }
+
     return return_error;
 }
 
@@ -1145,6 +1150,7 @@ EbErrorType svt_av1_set_default_params(EbSvtAv1EncConfiguration *config_ptr) {
     config_ptr->noise_norm_strength               = 0;
     config_ptr->kf_tf_strength                    = 1;
     config_ptr->spy_rd                            = 0;
+    config_ptr->sharp_tx                          = 1;
     return return_error;
 }
 
