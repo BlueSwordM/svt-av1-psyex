@@ -1865,13 +1865,38 @@ void svt_aom_sig_deriv_multi_processes(SequenceControlSet *scs, PictureParentCon
     // 1                                     ON
     pcs->frame_end_cdf_update_mode = 1;
 
-    if (scs->enable_hbd_mode_decision == DEFAULT)
+    //TUNE_CHROMA_SSIM currently doesn't work on mainline
+    /* // Tune TPL for better chroma.Only for 240P. 0 is OFF
+#if TUNE_CHROMA_SSIM
+    pcs->tune_tpl_for_chroma = 1;
+#else
+    pcs->tune_tpl_for_chroma = 0;
+#endif */
+
+    if (scs->enable_hbd_mode_decision == DEFAULT) {
+
+    if (pcs->scs->static_config.hbd_mds == 0) {
         if (enc_mode <= ENC_M2)
+            pcs->hbd_md = 1;
+        //Empiral testing shows enabling full 10-bit MD greatly increases
+        //ac-bias performance once it becomes strong enough (>=0.6)
+        if (enc_mode <= ENC_M4 && pcs->scs->static_config.ac_bias >= 1.2)
             pcs->hbd_md = 1;
         else if (enc_mode <= ENC_M5)
             pcs->hbd_md = is_base ? 2 : 0;
         else
             pcs->hbd_md = is_islice ? 2 : 0;
+
+    } else if (pcs->scs->static_config.hbd_mds == 1){
+        pcs->hbd_md = 1;
+
+    } else if (pcs->scs->static_config.hbd_mds == 2) {
+        pcs->hbd_md = 2;
+
+    } else if (pcs->scs->static_config.hbd_mds == 3) {
+        pcs->hbd_md = 0;
+    }
+}
     else
         pcs->hbd_md = scs->enable_hbd_mode_decision;
 
