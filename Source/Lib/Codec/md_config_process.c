@@ -272,6 +272,14 @@ static void svt_av1_qm_init(PictureParentControlSet *pcs) {
         const int32_t base_qindex        = pcs->frm_hdr.quantization_params.base_q_idx;
 
         switch (pcs->scs->static_config.tune) {
+        case TUNE_VQ:
+                //Chroma always seem to suffer too much with steep quantization matrices, so we're temporarily
+                //forcing not very steep quantization matrices for chroma channels
+                //Will enable for tune 0 and ideally within a range in the near future
+                pcs->frm_hdr.quantization_params.qm[AOM_PLANE_Y] = psy_get_qmlevel(base_qindex, min_qmlevel, max_qmlevel);
+                pcs->frm_hdr.quantization_params.qm[AOM_PLANE_U] = psy_get_qmlevel(base_qindex + pcs->frm_hdr.quantization_params.delta_q_ac[AOM_PLANE_U], min_chroma_qmlevel, max_chroma_qmlevel);
+                pcs->frm_hdr.quantization_params.qm[AOM_PLANE_V] = psy_get_qmlevel(base_qindex + pcs->frm_hdr.quantization_params.delta_q_ac[AOM_PLANE_V], min_chroma_qmlevel, max_chroma_qmlevel);
+                break;
         case TUNE_IQ:
             pcs->frm_hdr.quantization_params.qm[AOM_PLANE_Y] = svt_av1_still_get_qmlevel(
                 base_qindex, min_qmlevel, max_qmlevel);
