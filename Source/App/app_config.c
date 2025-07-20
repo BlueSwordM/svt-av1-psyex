@@ -207,6 +207,8 @@
 
 #define MAX_32_TX_SIZE_TOKEN "--max-32-tx-size"
 
+#define ADAPTIVE_FILM_GRAIN_TOKEN "--adaptive-film-grain"
+
 #define MIN_CHROMA_QM_LEVEL_TOKEN "--chroma-qm-min"
 #define MAX_CHROMA_QM_LEVEL_TOKEN "--chroma-qm-max"
 
@@ -1264,6 +1266,8 @@ ConfigEntry config_entry_variance_boost[] = {
     {SINGLE_INPUT, QP_SCALE_COMPRESS_STRENGTH_TOKEN, "[PSY] QP scale compress strength, default is 1 [0-3]", set_cfg_generic_token},
     // Max 32 tx size
     {SINGLE_INPUT, MAX_32_TX_SIZE_TOKEN, "[PSY] Limits the allowed transform sizes to a maximum of 32x32, default is 0 [0-1]", set_cfg_generic_token},
+    // Adaptive film grain
+    {SINGLE_INPUT, ADAPTIVE_FILM_GRAIN_TOKEN, "[PSY] Adapts film grain blocksize based on video resolution, default is 1 [0-1]", set_cfg_generic_token},
     // Min/max chroma qm
     {SINGLE_INPUT, MIN_CHROMA_QM_LEVEL_TOKEN, "[PSY] Min chroma quant matrix flatness, default is 8 [0-15]", set_cfg_generic_token},
     {SINGLE_INPUT, MAX_CHROMA_QM_LEVEL_TOKEN, "[PSY] Max chroma quant matrix flatness, default is 15 [0-15]", set_cfg_generic_token},
@@ -1482,6 +1486,9 @@ ConfigEntry config_entry[] = {
 
      // Max 32 tx size
     {SINGLE_INPUT, MAX_32_TX_SIZE_TOKEN, "Max32TxSize", set_cfg_generic_token},
+
+    // Adaptive film grain
+    {SINGLE_INPUT, ADAPTIVE_FILM_GRAIN_TOKEN, "AdaptiveFilmGrain", set_cfg_generic_token},
 
     // Chroma QM
     {SINGLE_INPUT, MIN_CHROMA_QM_LEVEL_TOKEN, "MinChromaQmLevel", set_cfg_generic_token},

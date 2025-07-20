@@ -1055,8 +1055,17 @@ typedef struct EbSvtAv1EncConfiguration {
      */
      uint8_t complex_hvs;
 
+     /* @brief Toggle default film grain blocksize behavior
+      * 0: use default blocksize behavior (32x32)
+      * 1: use adaptive blocksize based on resolution
+      *  - 8x8 for <4k
+      *  - 16x16 for 4k
+      * Default is 1
+      */
+     bool adaptive_film_grain;
+
     /*Add 128 Byte Padding to Struct to avoid changing the size of the public configuration struct*/
-    uint8_t padding[128 - 2 * sizeof(bool) - 10 * sizeof(uint8_t) - sizeof(double)];
+    uint8_t padding[128 - 3 * sizeof(bool) - 10 * sizeof(uint8_t) - sizeof(double)];
 } EbSvtAv1EncConfiguration;
 
 /**
