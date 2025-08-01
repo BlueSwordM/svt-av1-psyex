@@ -29,10 +29,10 @@ around tones areas (around edges, not edges themselves).
 
 - `Medium Fidelity (Less demanding content, medium bitrates)`
 
-`--preset X --complex-hvs 1 --crf XX --kf-tf-strength 1 --tf-strength 1 --noise-norm-strength 1 --enable-qm 1 --qm-min 4 --qm-max 15 --chroma-qm-min 10 --chroma-qm-max 15 --keyint 240 --tune 0 --sharpness 1 --filtering-noise-detection 4 --aq-mode 2 --qp-scale-compress-strength 1 --scm 0 --psy-rd 2.0 --variance-boost-strength 2`
+`--preset X --complex-hvs 1 --crf XX --kf-tf-strength 1 --tf-strength 1 --noise-norm-strength 1 --enable-qm 1 --qm-min 4 --qm-max 15 --chroma-qm-min 10 --chroma-qm-max 15 --keyint 240 --tune 0 --sharpness 1 --filtering-noise-detection 3 --aq-mode 2 --qp-scale-compress-strength 1 --scm 0 --psy-rd 2.0 --variance-boost-strength 2`
 
-I crank back some of the settings, including psy-rd as well as including `--filtering-noise-detection 4`, which enables restoration filtering at all times
-and tends to help improve image stability. CDEF is still disabled when noise levels are high, since its internal metric (MSE) to determine strength is still somewhat aggressive.
+I crank back some of the settings, including psy-rd as well as including `--filtering-noise-detection 3`, which enables restoration filtering at all times
+and tends to help improve image stability. CDEF is still disabled when noise levels are high, since its internal metric (MSE) used to determine strength is still somewhat aggressive.
 
 - `Balance of Appeal and Fidelity`
 
