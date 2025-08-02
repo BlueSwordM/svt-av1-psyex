@@ -262,7 +262,6 @@ SVT-AV1-PSYEX has enhanced defaults versus mainline SVT-AV1 in order to provide 
 - `--kf-tf-strength 1` controls are available to the user and are set to 1 by default to remove KF artifacts.
 - `--psy-rd 1.0` is set on by default. When combined with `--sharp-tx 1`, it makes tune 1 much stronger compared to mainline SVt-AV1.
 
-
 *We are not in any way affiliated with the Alliance for Open Media or any upstream SVT-AV1 project contributors who have not also contributed here.*
 
 ### Other Changes
@@ -279,19 +278,20 @@ We are always continuously improving SVT-AV1-PSY, and we always recommend using 
 
 Tune 4 features a smarter content detection algorithm to optimize the encoder for either screen or photographic content based on the image. This helps Tune 4 achieve better visual fidelity on still images.
 
-# For a diferent take on encoding, I recommend trying out SVT-AV1-HDR: https://github.com/juliobbv-p/svt-av1-hdr/
-
 # Building
 
 For Linux, macOS, & Windows build instructions, see the [PSY Development](Docs/PSY-Development.md) page.
 
 # Getting Involved
 
-For more information on SVT-AV1-PSY and this project's mission, see the [PSY Development](Docs/PSY-Development.md) page.
+For more information on SVT-AV1-PSYEX and this project's mission, see the [PSY Development](Docs/PSY-Development.md) page.
 
-### Use SVT-AV1-PSY
+### Use SVT-AV1-PSYEX
 
-One way to get involved is to use SVT-AV1-PSY in your own AV1 encoding projects, increasing the impact our work has on others! You and your users will also be able to provide feedback on the encoder's overall performance and report any issues you encounter. Your name will also be added to this page.
+One way to get involved is to use SVT-AV1-PSYEX in your own AV1 encoding projects, increasing the impact our work has on others! You and your users will also be able to provide feedback on the encoder's overall performance and report any issues you encounter. Your name will also be added to this page.
+
+If you use svt-av1-hdr or svt-av1-psyex, it doesn't matter; I'll still include you on this page. Just make sure to not miss too many letters and write svt-av1-e
+instead.
 
 **Projects Featuring SVT-AV1-PSY:**
 
