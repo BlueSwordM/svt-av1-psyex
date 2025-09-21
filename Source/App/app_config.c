@@ -1117,7 +1117,7 @@ ConfigEntry config_entry_specific[] = {
     {SINGLE_INPUT,
      TUNE_TOKEN,
      "Optimize the encoding process for different desired outcomes [0 = VQ, 1 = PSNR, 2 = SSIM, 3 = Subjective SSIM, 4 = Still Picture], "
-     "default is 2 "
+     "default is 0 "
      "[0-4]",
      set_cfg_generic_token},
     // MD Parameters
@@ -1277,7 +1277,7 @@ ConfigEntry config_entry_variance_boost[] = {
     //Alt-ref temporal filtering strength on keyframes
     {SINGLE_INPUT, KF_TF_STRENGTH_FILTER_TOKEN, "[PSY] Adjust alt-ref TF strength on keyframes, default is 1 (4x weaker than mainline) [0-4]", set_cfg_generic_token},
     //Psy-rd
-    {SINGLE_INPUT, PSY_RD_TOKEN, "[PSY] Psychovisual rate distortion strength, default is 0.5; high quality mode activated at >=0.6 and <=P6 (P-1 enables complex HVS model) [0.0-6.0]", set_cfg_generic_token},
+    {SINGLE_INPUT, PSY_RD_TOKEN, "[PSY] Psychovisual rate distortion strength, default is 1.0; high quality mode activated at >=1.2 and <=P6 (P-1 enables complex HVS model) [0.0-6.0]", set_cfg_generic_token},
     //Spy-rd
     {SINGLE_INPUT, SPY_RD_TOKEN, "[PSY] Alternative psychovisual rate distortion pathways, default is 0 [0-2]; 1 = full, 2 = partial", set_cfg_generic_token},
     //Low Q Taper
@@ -1289,7 +1289,7 @@ ConfigEntry config_entry_variance_boost[] = {
     //Complex HVS
     {SINGLE_INPUT, COMPLEX_HVS_TOKEN, "[PSY] Enable highest complexity HVS model, default is 0 [0: default preset behavior, 1: complex HVS model based on PSNR-HVS]", set_cfg_generic_token},
     //Noise adaptive filtering
-    {SINGLE_INPUT, NOISE_ADAPTIVE_FILTERING_TOKEN, "[PSY] Control noise detection for CDEF/restoration filtering, default is 2 to make tune 0/3 more balanced [0: default tune behavior, 1: always-on noise-adaptive filters, 2: off, 3: noise-adaptive CDEF only, 4: noise-adaptive restoration only)]", set_cfg_generic_token},
+    {SINGLE_INPUT, NOISE_ADAPTIVE_FILTERING_TOKEN, "[PSY] Control noise detection for CDEF/restoration filtering, default is 2 to make tune 0/3 more balanced [0: default tune behavior, 1: both CDEF and restoration noise-adaptive filtering are on, 2: off, 3: noise-adaptive CDEF only, 4: noise-adaptive restoration only)]", set_cfg_generic_token},
     // Termination
     {SINGLE_INPUT, NULL, NULL, NULL}};
 
