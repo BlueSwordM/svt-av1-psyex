@@ -58,6 +58,8 @@ For more consistent quality at the expense of compression efficiency:
 #### **Higher visual quality with a CPU tradeoff**
 For a significant visual quality increase at the cost of more encoding time:
 *   Add `--complex-hvs 1` to the above settings. This enables much higher quality mode decisions, which can greatly increase visual quality in all scenarios when psy-rd is active, particularly at higher strengths.
+*   If using Preset 3 and faster, set `--hbd-mds 1` to get static 10-bit mode decision, increasing visual quality and efficiency at all times.
+*   If using Preset 4 and faster, set `--enable-dlf 2` to increase deblocking filter quality.
 
 #### **Anime Encoding (Minimal Blur)**
 To preserve smooth, clean high quality lines in anime without excessive bitrate:
@@ -69,7 +71,7 @@ To preserve smooth, clean high quality lines in anime without excessive bitrate:
 
 _You have been warned_: don't expect great efficiency with these settings at CRF50 1080p60 natural content. It is also rather slow.
 
-`--preset X --complex-hvs 1 --crf XX --enable-cdef 0 --enable-restoration 0 --enable-tf 0 --spy-rd 1 --noise-norm-strength 3 --qm-min 10 --tune 0 --qp-scale-compress-strength 3 --scm 0 --psy-rd 4.0`
+`--preset X --complex-hvs 1 --crf XX --enable-cdef 0 --enable-restoration 0 --enable-tf 0 --spy-rd 1 --noise-norm-strength 3 --qm-min 10 --tune 0 --qp-scale-compress-strength 3 --scm 0 --psy-rd 4.0 --hbd-mds 1`
     
 If you want much more detailed information, you can just visit the x266 wiki on the subject and expect some future articles on there for a truely profound... deep dive. Sorry for the word play :)
 
@@ -124,16 +126,16 @@ A new progress mode that provides more detailed information about the encoding p
 
 Argument for providing a film grain table for synthetic film grain (similar to aomenc's '--film-grain-table=' argument).
 
-- `Extended CRF`
+- `Extended CRF` (for now, only quarter step CRF has been merged to mainline)
 
 Provides a more versatile and granular way to set CRF. Range has been expanded to 70 (from 63) to help with ultra-low bitrate encodes, and can now be set in quarter-step (0.25) increments.
 
-- `--qp-scale-compress-strength` *0.0 to 8.0*
+- `--qp-scale-compress-strength` *0.0 to 8.0* (**[Merged to Mainline](https://gitlab.com/AOMediaCodec/SVT-AV1/-/commit/bcf7c7fe42d6ef3ba2ffcc465580af2f679ba8a1)**)
 
 Increases video quality temporal consistency, especially with clips that contain film grain and/or contain fast-moving objects.
 The default is **1**, a conservative setting for most content.
 
-- `--enable-dlf 2`
+- `--enable-dlf 2` (**[Merged to Mainline](https://gitlab.com/AOMediaCodec/SVT-AV1/-/commit/e530da138d02fa7f7b338d6ef3e776007eb29b63)**)
 
 Enables a more accurate loop filter that prevents blocking, for a modest increase in compute time (most noticeable at presets 7 to 9).
 This stops being useful at **Preset 3**.
@@ -150,7 +152,7 @@ It was known before as `--frame-luma-bias`
 Enables frame-level luma bias to improve quality in dark scenes by adjusting frame-level QP based on average luminance across each frame.
 The default is **0**.
 
-- `--max-32-tx-size` *0 and 1*
+- `--max-32-tx-size` *0 and 1* (**[Merged to Mainline](https://gitlab.com/AOMediaCodec/SVT-AV1/-/commit/4f0794415e707daa3ce99791158d033be0196d98)**)
 
 Restricts available transform sizes to a maximum of 32x32 pixels. Can help slightly improve detail retention at high fidelity CRFs.
 The default is **0**.
@@ -168,7 +170,7 @@ Set the path to an HDR10+ JSON file for encoding HDR10+ video. SVT-AV1-PSY needs
 
 Manually adjust temporal filtering strength to adjust the trade-off between fewer artifacts in motion and fine detail retention. Each increment is a 2x increase in temporal filtering strength; the default value of 1 is 4x weaker than mainline SVT-AV1's default temporal filter (which would be equivalent to 3 here).
 
-- `--chroma-qm-min` & `--chroma-qm-max` *0 to 15*
+- `--chroma-qm-min` & `--chroma-qm-max` *0 to 15* (**[Merged to Mainline](https://gitlab.com/AOMediaCodec/SVT-AV1/-/commit/4f0794415e707daa3ce99791158d033be0196d98)**)
 
 Set the minimum & maximum quantization matrices for chroma planes. The defaults are 8 and 15, respectively. These options decouple chroma quantization matrix control from the luma quantization matrix options currently available, allowing for more control over chroma quality.
 
@@ -250,12 +252,14 @@ It is not recommended to set `--complex-hvs 1` on presets faster than 6.
 
 Default is **0**.
 
-- `--filtering-noise-detection`
+- `--noise-adaptive-filtering`
 
 This setting controls the noise detection algorithm that turns off CDEF/restoration filtering if the noise level is high enough; this feature is enabled by default
 if you use tune 0/tune 3. By popular request, a member of our community has decided to add this setting to improve visual appeal on less demanding content.
 
-0 follows default tune behavior, 1 always enables noise adaptive CDEF/restoration filters, 2 forcefully disables the noise-adaptive CDEF/restoration filters, resulting in CDEF/restoration filtering always being on.
+0 follows default tune behavior, 1  enables noise adaptive CDEF and restoration filters.
+
+2 forcefully disables the noise-adaptive CDEF/restoration filters, resulting in CDEF/restoration filtering always being on.
 
 3 only enables noise-adaptive filtering for CDEF, forcing restoration filtering at all times.
 4 only enables noise-adaptive filtering for restoration, enabling CDEF at all times.
@@ -269,16 +273,19 @@ SVT-AV1-PSYEX has enhanced defaults versus mainline SVT-AV1 in order to provide 
 
 - Default 10-bit color depth when given a 10-bit input.
 - Disable film grain denoising by default, as it often harms visual fidelity. (**[Merged to Mainline](https://gitlab.com/AOMediaCodec/SVT-AV1/-/commit/8b39b41df9e07bbcdbd19ea618762c5db3353c03)**)
-- Enable quantization matrices by default.
-- Set minimum QM level to 4 by default for more consistent performance that min QM level 0 doesn't offer. It has been increased from 2, as 4 provides the most balanced gains overall.
-- Set minimum chroma QM level to 8 by default to prevent the encoder from picking suboptimal chroma QMs.
-- `--enable-variance-boost` enabled by default.
+- Enable quantization matrices by default through `--enable-qm 1`
+- `--tune 0` has been enabled for higher quality encodes by default
+- `--noise-adaptive-filtering 2` has been enabled to balance the sharpness from tune 0 while still allowing for higher sharpness than tune 1.
+- Set `--qm-min 4` by default for more consistent performance that min QM level 0 doesn't offer. It has been increased from 2, as 4 provides the most balanced gains overall.
+- `--chroma-qm-min 10` has been set by default to greatly increase chroma quality, as the encoder will tend to pick too low chroma QMs otherwise.
+- `--enable-variance-boost 1` enabled by default.
 - `--keyint -2` (the default) uses a ~10s GOP size instead of ~5s.
 - `--sharpness 1` by default to prioritize encoder sharpness.
-- Sharp transform optimizations (`--sharp-tx 1`) are enabled by default to supercharge svt-av1-psy psy-rd optimizations. It is recommended to disable it if you don't use `--psy-rd`, which is set to **1.0** by default.
+- Sharp transform optimizations (`--sharp-tx 1`) are enabled by default to supercharge svt-av1-psy psy-rd optimizations. It is recommended to disable it if you don't use `--psy-rd`.
 - `--tf-strength 1` by default for much lower alt-ref temporal filtering to decrease blur for cleaner encoding.
 - `--kf-tf-strength 1` controls are available to the user and are set to 1 by default to remove KF artifacts.
 - `--psy-rd 1.0` is set on by default. When combined with `--sharp-tx 1`, it makes tune 1 much stronger compared to mainline SVt-AV1.
+- `--qp-scale-compress-strength 1` has been set to increase visual quality consistency.
 
 *We are not in any way affiliated with the Alliance for Open Media or any upstream SVT-AV1 project contributors who have not also contributed here.*
 
