@@ -1289,7 +1289,7 @@ ConfigEntry config_entry_variance_boost[] = {
     //Complex HVS
     {SINGLE_INPUT, COMPLEX_HVS_TOKEN, "[PSY] Enable highest complexity HVS model, default is 0 [0: default preset behavior, 1: complex HVS model based on PSNR-HVS]", set_cfg_generic_token},
     //Noise adaptive filtering
-    {SINGLE_INPUT, NOISE_ADAPTIVE_FILTERING_TOKEN, "[PSY] Control noise detection for CDEF/restoration filtering, default is 0 to make tune 0/3 more balanced and less sharp [0: off, 1: both CDEF and restoration noise-adaptive filtering are on, sharper 2: default tune behavior, 3: noise-adaptive CDEF only, 4: noise-adaptive restoration only)]", set_cfg_generic_token},
+    {SINGLE_INPUT, NOISE_ADAPTIVE_FILTERING_TOKEN, "[PSY] Control noise detection for CDEF/restoration filtering, default is 0 to make tune 0/3 more balanced and less sharp [0: off, 1: both CDEF and restoration noise-adaptive filtering are on and is sharper 2: default tune behavior, 3: noise-adaptive CDEF only, 4: noise-adaptive restoration only)]", set_cfg_generic_token},
     // Termination
     {SINGLE_INPUT, NULL, NULL, NULL}};
 
