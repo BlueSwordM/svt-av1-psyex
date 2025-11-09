@@ -986,6 +986,7 @@ static int crf_qindex_calc(PictureControlSet *pcs, RATE_CONTROL *rc, int qindex)
     assert(ppcs->bottom_index <= rc->worst_quality && ppcs->bottom_index >= rc->best_quality);
     return q;
 }
+#if !TUNE_CQP_CHROMA_SSIM
 /******************************************************
  * non_base_boost
  * Compute a non-base frame boost.
@@ -1005,7 +1006,7 @@ static int8_t non_base_boost(PictureControlSet *pcs) {
     }
     return q_boost;
 }
-
+#endif
 /******************************************************
  * cqp_qindex_calc
  * Assign the q_index per frame.
@@ -3947,8 +3948,8 @@ void *svt_aom_rate_control_kernel(void *input_ptr) {
                 cyclic_sb_qp_derivation(pcs);
             }
 
-            if (pcs->scs->static_config.tune == TUNE_SSIM && !pcs->ppcs->frm_hdr.delta_q_params.delta_q_present) {
-                // enable sb level qindex when tune SSIM
+            if ((pcs->scs->static_config.tune == TUNE_SSIM || pcs->scs->static_config.tune == TUNE_VQSSIM) && !pcs->ppcs->frm_hdr.delta_q_params.delta_q_present) {
+                // enable sb level qindex when tune SSIM or VQ-SSIM
                 pcs->ppcs->frm_hdr.delta_q_params.delta_q_present = 1;
             }
 

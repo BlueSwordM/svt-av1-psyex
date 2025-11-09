@@ -3241,6 +3241,17 @@ static void derive_vq_params(SequenceControlSet* scs) {
         vq_ctrl->sharpness_ctrls.restoration      = 1;
         vq_ctrl->sharpness_ctrls.rdoq             = 1;
     }
+    else if (scs->static_config.tune == TUNE_VQSSIM) {
+        vq_ctrl->sharpness_ctrls.scene_transition = 1;
+        vq_ctrl->sharpness_ctrls.tf               = 1;
+        vq_ctrl->sharpness_ctrls.unipred_bias     = 1;
+        vq_ctrl->sharpness_ctrls.ifs              = 1;
+        vq_ctrl->sharpness_ctrls.cdef             = 1;
+        vq_ctrl->sharpness_ctrls.restoration      = 1;
+        vq_ctrl->sharpness_ctrls.rdoq             = 1;
+        // Stability (not present currently in mainline)
+        //vq_ctrl->stability_ctrls.depth_refinement = 1;
+    }
     else {
 
         // Sharpness
@@ -4013,7 +4024,7 @@ static void set_param_based_on_input(SequenceControlSet *scs)
     if (scs->static_config.variance_boost_strength >= 4) {
         SVT_WARN("Aggressive Variance Boost strength used. This is a curve that's only useful under specific situations. Use with caution!\n");
     }
-    if (scs->static_config.max_tx_size == 32 && scs->static_config.qp >= 25 && scs->static_config.tune != 3) {
+    if (scs->static_config.max_tx_size == 32 && scs->static_config.qp >= 25 && scs->static_config.tune != TUNE_IQ) {
         SVT_WARN("Restricting transform sizes to a max of 32x32 might reduce coding efficiency at low to medium fidelity settings. Use with caution!\n");
     }
     if (scs->static_config.intra_refresh_type == SVT_AV1_FWDKF_REFRESH && scs->static_config.hierarchical_levels != 4){

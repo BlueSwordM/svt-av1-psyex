@@ -3786,6 +3786,11 @@ uint32_t svt_aom_product_full_mode_decision(
                     cost = (cost * uni_psy_bias[pcs->picture_qp]) / 100;
                 }
 
+                if (scs->static_config.tune == TUNE_VQSSIM &&
+                    pcs->ppcs->slice_type == B_SLICE) { // Only somewhat reverse the uni psy bias on B-Frames, prevents sharp / squiggling(lack of a better term?) artifacting
+                    cost = (cost * bi_psy_bias[pcs->picture_qp]) / 100;
+                }
+
                 if (cost < lowest_cost) {
                     lowest_cost_index = cand_index;
                     lowest_cost = cost;
@@ -4083,7 +4088,7 @@ void  svt_aom_set_tuned_blk_lambda(struct ModeDecisionContext *ctx, PictureContr
     ctx->fast_lambda_md[EB_8_BIT_MD] = (uint32_t)((double)ctx->ed_ctx->pic_fast_lambda[EB_8_BIT_MD] * geom_mean_of_scale + 0.5);
     ctx->fast_lambda_md[EB_10_BIT_MD] = (uint32_t)((double)ctx->ed_ctx->pic_fast_lambda[EB_10_BIT_MD] * geom_mean_of_scale + 0.5);
 
-    if (ppcs->scs->static_config.tune == TUNE_SSIM) {
+    if (ppcs->scs->static_config.tune == TUNE_SSIM || ppcs->scs->static_config.tune == TUNE_VQSSIM) {
         aom_av1_set_ssim_rdmult(ctx, pcs, mi_row, mi_col);
     }
 }

@@ -1216,6 +1216,8 @@ extern const int percents[2][FIXED_QP_OFFSET_COUNT];
 
 extern const uint8_t uni_psy_bias[64];
 
+extern const uint8_t bi_psy_bias[64];
+
 extern void svt_aom_reset_mode_decision(SequenceControlSet *scs, ModeDecisionContext *ctx, PictureControlSet *pcs,
                                         uint16_t tile_row_idx, uint32_t segment_index);
 

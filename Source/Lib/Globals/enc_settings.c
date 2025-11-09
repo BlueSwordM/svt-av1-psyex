@@ -551,22 +551,22 @@ EbErrorType svt_av1_verify_settings(SequenceControlSet *scs) {
             config->fast_decode);
         return_error = EB_ErrorBadParameter;
     }
-    if (config->tune > TUNE_IQ) {
+    if (config->tune > TUNE_VQSSIM) {
         SVT_ERROR(
-            "Instance %u: Invalid tune flag [0 - 3, 0 for VQ, 1 for PSNR, 2 for SSIM and 3 for IQ], your input: %d\n",
+            "Instance %u: Invalid tune flag [0 - 4, 0 for VQ, 1 for PSNR, 2 for SSIM, 3 for IQ, 4 for VQ-SSIM], your input: %d\n",
             channel_number + 1,
             config->tune);
         return_error = EB_ErrorBadParameter;
     }
-    if (config->tune == TUNE_SSIM) {
+    if (config->tune == TUNE_SSIM || config->tune == TUNE_VQSSIM) {
         if (config->rate_control_mode != 0 || config->pred_structure != RANDOM_ACCESS) {
-            SVT_ERROR("Instance %u: tune SSIM only supports CRF rate control mode currently\n",
+            SVT_ERROR("Instance %u: SSIM based tunes (normal, VQSSIM) only support CRF rate control mode currently\n",
                       channel_number + 1,
                       config->tune);
             return_error = EB_ErrorBadParameter;
         } else {
             SVT_WARN(
-                "Instance %u: tune ssim (2) is supported for testing and debugging purposes."
+                "Instance %u: the SSIM tunes (normal, VQSSIM) are supported for testing and debugging purposes."
                 "This configuration should not be used for any benchmarking analysis at this stage\n",
                 channel_number + 1);
         }
@@ -876,10 +876,10 @@ EbErrorType svt_av1_verify_settings(SequenceControlSet *scs) {
             "consider using --fast-decode 1 or 2, especially if the intended decoder is running with "
             "limited multi-threading capabilities.\n");
     }
-    if (config->tune == TUNE_VQ && config->fast_decode > 0) {
+    if ((config->tune == TUNE_VQ || config->tune == TUNE_VQSSIM ) && config->fast_decode > 0) {
         SVT_WARN(
             "--fast - decode has been developed and optimized with --tune 1. "
-            "Please use it with caution when encoding with --tune 0. You can also consider using "
+            "Please use it with caution when encoding with --tune 0 or --tune 4. You can also consider using "
             "--tile-columns 1 if you are targeting a high quality encode and a multi-core "
             "high-performance decoder HW\n");
     }
@@ -1183,6 +1183,7 @@ void svt_av1_print_lib_params(SequenceControlSet *scs) {
                  config->tune == TUNE_VQ         ? "VQ"
                      : config->tune == TUNE_PSNR ? "PSNR"
                      : config->tune == TUNE_SSIM ? "SSIM"
+                     : config->tune == TUNE_VQSSIM ? "VQSSIM"
                                                  : "IQ",
                  config->pred_structure == LOW_DELAY           ? "low delay"
                      : config->pred_structure == RANDOM_ACCESS ? "random access"
