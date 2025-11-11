@@ -1422,7 +1422,7 @@ void svt_av1_perform_noise_normalization(MacroblockPlane *p,
     const int shift = av1_get_tx_scale_tab[tx_size];
     const int width = get_txb_wide_tab[tx_size];
     const int height = get_txb_high_tab[tx_size];
-    const ScanOrder *const scan_order = &av1_scan_orders[tx_size][tx_type];
+    const ScanOrder *const scan_order = &eb_av1_scan_orders[tx_size][tx_type];
     const int16_t *scan = scan_order->scan;
     const uint8_t noisenorm_strength = pcs->scs->static_config.noise_norm_strength;
 
