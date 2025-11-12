@@ -1039,6 +1039,16 @@ typedef struct EbSvtAv1EncConfiguration {
      * 4: 10 + (4 - 4) = 10 (2x stronger) */
      uint8_t kf_tf_strength;
 
+    /**
+     * @brief Enable spy-rd, an alternate RD metric that biases towards sharpness/detail retention,
+     * at the possible expense of increased blocking and banding
+     * 0: disabled
+     * 1: enabled
+     * 2: partial (interpolation filter tweaks only)
+     * Default is 0
+     */
+    bool spy_rd;
+
     /*Add 128 Byte Padding to Struct to avoid changing the size of the public configuration struct*/
     uint8_t padding[128 - (sizeof(uint8_t) * 5)
         - (sizeof(bool) * 2)

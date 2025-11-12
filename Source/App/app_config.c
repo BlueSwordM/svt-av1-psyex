@@ -222,6 +222,7 @@
 
 #define NOISE_NORM_STRENGTH_TOKEN "--noise-norm-strength"
 #define KF_TF_STRENGTH_FILTER_TOKEN "--kf-tf-strength"
+#define SPY_RD_TOKEN "--spy-rd"
 
 static EbErrorType validate_error(EbErrorType err, const char *token, const char *value) {
     switch (err) {
@@ -1045,6 +1046,8 @@ ConfigDescription config_entry_variance_boost[] = {
     {NOISE_NORM_STRENGTH_TOKEN, "[PSY] Noise normalization strength, default is 0 [0-4]"},
     //Alt-ref temporal filtering strength on keyframes
     {KF_TF_STRENGTH_FILTER_TOKEN, "[PSY] Adjust TF strength on keyframes, default is 1 (4x weaker than mainline) [0-4]"},
+    //Spy-rd
+    {SPY_RD_TOKEN, "[PSY] Alternative psychovisual rate distortion pathways, default is 0 [0-2]; 1 = full, 2 = partial"},
     // Termination
     {NULL, NULL}};
 
@@ -1276,6 +1279,9 @@ ConfigEntry config_entry[] = {
 
     //Alt-ref temporal filtering strength on keyframes
     {KF_TF_STRENGTH_FILTER_TOKEN, "KeyframeTemporalFilteringStrength", set_cfg_generic_token},
+
+    // Spy rd
+    {SPY_RD_TOKEN, "SpyRd", set_cfg_generic_token},
 
     // Termination
     {NULL, NULL, NULL}};
