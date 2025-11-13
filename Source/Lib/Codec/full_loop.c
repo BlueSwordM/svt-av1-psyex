@@ -1838,6 +1838,7 @@ void svt_aom_full_loop_chroma_light_pd1(PictureControlSet *pcs, ModeDecisionCont
                                         uint64_t *cr_coeff_bits) {
     uint32_t     full_lambda = ctx->hbd_md ? ctx->full_lambda_md[EB_10_BIT_MD] : ctx->full_lambda_md[EB_8_BIT_MD];
     const TxSize tx_size_uv  = ctx->blk_geom->txsize_uv[0];
+    const double effective_ac_bias = get_effective_ac_bias(pcs->scs->static_config.ac_bias, pcs->slice_type == I_SLICE, pcs->temporal_layer_index);
 
     EB_TRANS_COEFF_SHAPE pf_shape = ctx->pf_ctrls.pf_shape;
     // If Cb component not detected as complex, can use TX shortcuts
