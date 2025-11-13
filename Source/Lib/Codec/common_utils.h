@@ -51,6 +51,19 @@ static INLINE PredictionMode get_uv_mode(UvPredictionMode mode) {
     return g_uv2y[mode];
 }
 
+// CFL pred behaviorally maps to a unipred inter mode better than to DC intra mode,
+// so manually account for that case
+static INLINE PredictionMode get_uv_mode_cfl_aware(UvPredictionMode mode) {
+    // Check if the mode is a valid chroma intra mode.
+    if (mode >= UV_DC_PRED && mode < UV_INTRA_MODES) {
+        return mode != UV_CFL_PRED ? get_uv_mode(mode) : NEARESTMV;
+    } else {
+        // If false, return a "neutral" value.
+        // This achieves the goal of disabling the spy-rd biases for this case.
+        return MB_MODE_COUNT;
+    }
+}
+
 static INLINE TxType intra_mode_to_tx_type(PredictionMode pred_mode, UvPredictionMode pred_mode_uv,
                                            PlaneType plane_type) {
     const PredictionMode mode = (plane_type == PLANE_TYPE_Y) ? pred_mode : get_uv_mode(pred_mode_uv);
