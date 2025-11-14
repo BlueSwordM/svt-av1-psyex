@@ -1047,7 +1047,7 @@ typedef struct EbSvtAv1EncConfiguration {
      * 2: partial (interpolation filter tweaks only)
      * Default is 0
      */
-    bool spy_rd;
+    uint8_t spy_rd;
 
     /*Add 128 Byte Padding to Struct to avoid changing the size of the public configuration struct*/
     uint8_t padding[128 - (sizeof(uint8_t) * 5)
