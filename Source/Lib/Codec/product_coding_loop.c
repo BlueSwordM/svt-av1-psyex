@@ -4500,9 +4500,10 @@ static void tx_type_search(PictureControlSet *pcs, ModeDecisionContext *ctx, Mod
                                            ctx->blk_geom->tx_width[ctx->tx_depth],
                                            ctx->blk_geom->tx_height[ctx->tx_depth],
                                            ctx->hbd_md);
-
-                EbSpatialFullDistType spatial_full_dist_type_fun = ctx->hbd_md ? svt_full_distortion_kernel16_bits
-                                                                               : svt_spatial_full_distortion_kernel;
+                // Since we're using svt_spatial_full_distortion_kernel_facade for spy-rd and get_svt_psy_full_dist,
+                // there is no need for this pointer function variable
+                /*EbSpatialFullDistType spatial_full_dist_type_fun = ctx->hbd_md ? svt_full_distortion_kernel16_bits
+                                                                               : svt_spatial_full_distortion_kernel; */
                 txb_full_distortion_txt[DIST_SSD][tx_type][DIST_CALC_PREDICTION] = svt_spatial_full_distortion_kernel_facade(
                     input_pic->buffer_y,
                     input_txb_origin_index,
@@ -5466,8 +5467,10 @@ static void perform_dct_dct_tx(PictureControlSet *pcs, ModeDecisionContext *ctx,
                                              pcs->ppcs->aligned_width - (ctx->sb_origin_x + tx_org_x));
         const int32_t cropped_tx_height = MIN((uint8_t)(ctx->blk_geom->tx_height[tx_depth] >> ctx->mds_subres_step),
                                               pcs->ppcs->aligned_height - (ctx->sb_origin_y + tx_org_y));
-        EbSpatialFullDistType spatial_full_dist_type_fun = ctx->hbd_md ? svt_full_distortion_kernel16_bits
-                                                                       : svt_spatial_full_distortion_kernel;
+        // Since we're using svt_spatial_full_distortion_kernel_facade for spy-rd and get_svt_psy_full_dist,
+        // there is no need for this pointer function variable
+        /*EbSpatialFullDistType spatial_full_dist_type_fun = ctx->hbd_md ? svt_full_distortion_kernel16_bits
+                                                                       : svt_spatial_full_distortion_kernel; */
         // clang-format on
         if (ssim_level == SSIM_LVL_1 || ssim_level == SSIM_LVL_3) {
             y_full_distortion[DIST_SSIM][DIST_CALC_PREDICTION] = svt_spatial_full_distortion_ssim_kernel(
